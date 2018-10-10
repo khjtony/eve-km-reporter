@@ -7,7 +7,7 @@ from pprint import pprint
 
 def km_get(qbot, group):
     url = 'https://redisq.zkillboard.com/listen.php'
-    alliance_list = [99007362]
+    alliance_list = [99007362]      # RR联盟ID
     km_dict = {}
     while(True):
         res = urllib.request.urlopen(url)
@@ -49,8 +49,8 @@ def km_get(qbot, group):
                 pprint(e.args)
                 continue
 
-qbot.Login(['-q', '254533538'])
-RR_group = qbot.List('group', 'RR游骑兵-为战而生')
+qbot.Login(['-q', '你的QQ号'])
+RR_group = qbot.List('group', 'QQ群名称')
 if(RR_group):
     group = RR_group[0]
     km_get(qbot, group)
