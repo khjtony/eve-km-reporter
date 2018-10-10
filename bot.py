@@ -12,7 +12,7 @@ def km_get(qbot, group):
     while(True):
         res = urllib.request.urlopen(url)
         res = json.loads(res.read().decode('utf-8'))
-        debug_flag = False 
+        debug_flag = True 
         if(res['package'] == None):
             continue
         else:
@@ -25,12 +25,15 @@ def km_get(qbot, group):
                     corporation_res = json.loads(urllib.request.urlopen(corporation_url).read().decode('utf-8'))
                     system_url = 'https://esi.evetech.net/latest/universe/systems/{}/?datasource=tranquility&language=en-us'.format(res['package']['killmail']['solar_system_id'])
                     system_res = json.loads(urllib.request.urlopen(system_url).read().decode('utf-8'))
+                    ship_url = 'https://esi.evetech.net/latest/universe/types/{}/?datasource=tranquility&language=en-us'.format(res['package']['killmail']['victim']['ship_type_id'])
+                    ship_res = json.loads(urllib.request.urlopen(ship_url).read().decode('utf-8'))
 
                     totalValue = res['package']['zkb']['totalValue']
                     if(character_res['name'] not in km_dict or totalValue not in km_dict[character_res['name']]):
-                        km_msg = '[熊当当KM报告] {0} 军团的 {1} 惨死于 {2} ，损失了 {3:.2f}亿 isk.\n https://zkillboard.com/kill/{4}'.format(
+                        km_msg = '[熊当当KM报告] {0} 军团 {1} 驾驶的 {2} 惨死于 {3} ，损失了 {4:.2f}亿 isk.\n https://zkillboard.com/kill/{5}'.format(
                             corporation_res['name'], 
                             character_res['name'], 
+                            ship_res['name'],
                             system_res['name'],
                             res['package']['zkb']['totalValue']/100000000.0, 
                             res['package']['killID'])
