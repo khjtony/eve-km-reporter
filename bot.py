@@ -23,9 +23,17 @@ def km_get(qbot, group):
                     character_res = json.load(character_res)
                     corporation_url = 'https://esi.evetech.net/latest/corporations/{}/?datasource=tranquility'.format(res['package']['killmail']['victim']['corporation_id'])
                     corporation_res = json.load(urllib.request.urlopen(corporation_url))
+                    system_url = 'https://esi.evetech.net/latest/universe/systems/{}/?datasource=tranquility&language=en-us'.format(res['package']['killmail']['solar_system_id'])
+                    system_res = json.load(urllib.request.urlopen(system_url))
+
                     totalValue = res['package']['zkb']['totalValue']
                     if(character_res['name'] not in km_dict or totalValue not in km_dict[character_res['name']]):
-                        km_msg = '[熊当当KM报告] {}军团的{}惨死，损失了{} isk.\n https://zkillboard.com/kill/{}'.format(corporation_res['name'], character_res['name'], res['package']['zkb']['totalValue'], res['package']['killID'])
+                        km_msg = '[熊当当KM报告] {} 军团的 {} 惨死于 {} ，损失了 {0:.2f}亿 isk.\n https://zkillboard.com/kill/{}'.format(
+                            corporation_res['name'], 
+                            character_res['name'], 
+                            system_res['name'],
+                            res['package']['zkb']['totalValue']/100000000.0, 
+                            res['package']['killID'])
                         if(not debug_flag):
                             qbot.SendTo(group, km_msg)
                         print(km_msg)
