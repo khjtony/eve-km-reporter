@@ -11,7 +11,7 @@ def km_get(qbot, group):
     km_dict = {}
     while(True):
         res = urllib.request.urlopen(url)
-        res = json.load(res)
+        res = json.loads(res.read().decode('utf-8'))
         debug_flag = False 
         if(res['package'] == None):
             continue
@@ -20,15 +20,15 @@ def km_get(qbot, group):
                 if(debug_flag or ('alliance_id' in res['package']['killmail']['victim'] and res['package']['killmail']['victim']['alliance_id'] in alliance_list)):
                     character_url = 'https://esi.evetech.net/latest/characters/{}/?datasource=tranquility'.format(res['package']['killmail']['victim']['character_id'])
                     character_res = urllib.request.urlopen(character_url)
-                    character_res = json.load(character_res)
+                    character_res = json.loads(character_res.read().decode('utf-8'))
                     corporation_url = 'https://esi.evetech.net/latest/corporations/{}/?datasource=tranquility'.format(res['package']['killmail']['victim']['corporation_id'])
-                    corporation_res = json.load(urllib.request.urlopen(corporation_url))
+                    corporation_res = json.loads(urllib.request.urlopen(corporation_url).read().decode('utf-8'))
                     system_url = 'https://esi.evetech.net/latest/universe/systems/{}/?datasource=tranquility&language=en-us'.format(res['package']['killmail']['solar_system_id'])
-                    system_res = json.load(urllib.request.urlopen(system_url))
+                    system_res = json.loads(urllib.request.urlopen(system_url).read().decode('utf-8'))
 
                     totalValue = res['package']['zkb']['totalValue']
                     if(character_res['name'] not in km_dict or totalValue not in km_dict[character_res['name']]):
-                        km_msg = '[熊当当KM报告] {} 军团的 {} 惨死于 {} ，损失了 {0:.2f}亿 isk.\n https://zkillboard.com/kill/{}'.format(
+                        km_msg = '[熊当当KM报告] {0} 军团的 {1} 惨死于 {2} ，损失了 {3:.2f}亿 isk.\n https://zkillboard.com/kill/{4}'.format(
                             corporation_res['name'], 
                             character_res['name'], 
                             system_res['name'],
